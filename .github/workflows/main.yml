@@ -32,10 +32,8 @@ jobs:
       - name: Run mlflow project
         run: |
           # Pastikan path ini sesuai dengan lokasi script preprocessing kamu
-          rm -rf mlruns/ || true
+          mlflow run MLproject --env-manager=local 
 
-          mlflow run MLproject --env-manager=local
-          
       - name: Set up Git LFS
         run: |
           git config --global user.name valiarw
