@@ -1,0 +1,54 @@
+name: CI
+ 
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  CSV_URL: "MLproject/train.csv"
+
+jobs:
+  build:
+    runs-on: windows-latest
+ 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.7'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mlflow
+
+      - name: Run mlflow project
+        run: |
+          # Pastikan path ini sesuai dengan lokasi script preprocessing kamu
+          mlflow run MLproject --env-manager=local 
+
+      - name: Set up Git LFS
+        run: |
+          git config --global user.name ${{ secrets.username }}
+          git config --global user.email ${{ secrets.email }}
+          git lfs install
+          git lfs track "mlruns/**"
+          git add .gitattributes
+          git commit -m "Track large files in mlruns with Git LFS" || true
+          git push origin main
+          
+       # Save models to GitHub Repository
+      - name: Save mlruns to repo
+        run: |
+          git config --global user.name ${{ secrets.username }}
+          git config --global user.email ${{ secrets.email }}
+          git add -f mlruns/
+          git commit -m "Save mlruns from CI run" || true
+          git push origin main
