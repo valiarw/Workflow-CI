@@ -1,5 +1,4 @@
 /classification_report.txt
 /confusion_matrix.png
-mlflow-dockerfile
 /mlruns
 /test_api.py
