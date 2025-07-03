@@ -24,57 +24,30 @@ jobs:
         with:
           python-version: '3.12.7'
 
+      - name: Check Env
+        run: |
+          echo $CSV_URL
+          
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install mlflow
 
-      - name: Set MLflow Tracking Credentials for DagsHub
-        env:
-          MLFLOW_TRACKING_URI: ${{ secrets.DAGSHUB_MLFLOW_URI }} 
-          MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
-          MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
-        run: |
-          echo "MLFLOW_TRACKING_URI set for DagsHub"
-          
-      - name: Run MLflow Training Script
-        run: |
-          python MLProject/modelling.py 100 10
-
       - name: Run mlflow project
         run: |
           mlflow run MLproject --env-manager=local 
 
-      - name: Get latest MLflow run_id from DagsHub
-        id: get_run_id 
+      # Get latest run_id
+      - name: Get latest MLflow run_id
         run: |
-          # This query searches for runs in your experiment, orders by start time, and gets the run_id of the latest one.
-          LATEST_RUN_ID=$(mlflow search runs --experiment-name "Heart-Failure Prediction" \
-            --order-by "start_time DESC" --max-results 1 \
-            --output-columns "run_id" --query "tags.mlflow.runName LIKE 'RF_%'" \
-            | tail -n 1 | awk '{print $1}')
-          
-          # Check if RUN_ID was found
-          if [ -z "$LATEST_RUN_ID" ]; then
-            echo "Error: No MLflow run_id found for experiment 'Heart-Failure Prediction'."
-            exit 1
-          fi
-          
-          echo "LATEST_RUN_ID=$LATEST_RUN_ID" >> $GITHUB_ENV
-          echo "Latest run_id from DagsHub: $LATEST_RUN_ID"
-          
-        env: # Ensure credentials are available for mlflow search runs
-            MLFLOW_TRACKING_URI: ${{ secrets.DAGSHUB_MLFLOW_URI }}
-            MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
-            MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
+          RUN_ID=$(ls -td mlruns/0/*/ | head -n 1 | cut -d'/' -f3)
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+          echo "Latest run_id: $RUN_ID"
+         
       # Build Docker Model
       - name: Build Docker Model
         run: |
-          mlflow models build-docker --model-uri "runs:/${{ env.LATEST_RUN_ID }}/model" --name "heart-failure-predictor-model"
-        env: 
-            MLFLOW_TRACKING_URI: ${{ secrets.DAGSHUB_MLFLOW_URI }}
-            MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
-            MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
+          mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name "cc" 
 
       # Login to Docker Hub
       - name: Log in to Docker Hub
@@ -84,12 +57,14 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       # Tag the Docker image
-      - name: Tag and Push Docker Image
+      - name: Tag Docker Image
         run: |
-          IMAGE_NAME="${{ secrets.DOCKER_HUB_USERNAME }}/heart-failure-predictor-model"
-          IMAGE_TAG="latest" # Or use a more specific tag like ${{ github.sha }} or a version from your project
-          docker tag heart-failure-predictor-model $IMAGE_NAME:$IMAGE_TAG
-          docker push $IMAGE_NAME:$IMAGE_TAG
+          docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+
+      # Push Docker image to Docker Hub
+      - name: Push Docker Image
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
 
       - name: Set up Git LFS
         run: |
