@@ -9,7 +9,7 @@ on:
       - main
       
 env:
-  CSV_URL: "MLproject/train.csv"
+  CSV_URL: "heart_preprocessing/train.csv"
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
       - name: Run mlflow project
         run: |
           # Pastikan path ini sesuai dengan lokasi script preprocessing kamu
-          mlflow run MLproject --env-manager=local 
+          mlflow run MLProject --env-manager=local 
 
       # Get latest run_id
       - name: Get latest MLflow run_id
