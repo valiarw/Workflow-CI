@@ -67,15 +67,6 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
 
-      - name: Set up Git LFS
-        run: |
-          git config --global user.name valiarw
-          git config --global user.email valiarw1300@gmail.com
-          git lfs install
-          git lfs track "mlruns/**"
-          git add .gitattributes
-          git commit -m "Track large files in mlruns with Git LFS" || true
-          git push origin main
           
        # Save models to GitHub Repository
       - name: Save mlruns to repo

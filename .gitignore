@@ -1,3 +1,5 @@
 /classification_report.txt
 /confusion_matrix.png
 /test_api.py
+/mlruns
+/mlartifacts
