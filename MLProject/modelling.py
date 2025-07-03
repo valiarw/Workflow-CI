@@ -18,11 +18,6 @@ from urllib.parse import urlparse # Diperlukan untuk mengecek tipe tracking URI
 # --- Konfigurasi Awal MLflow ---
 mlflow.sklearn.autolog(disable=True) 
 
-# Set URI tracking MLflow ke Dagshub
-# Ini HARUS diatur di file training Anda agar semua log dan artefak masuk ke Dagshub
-remote_server_uri = "https://dagshub.com/valiarw/Membangun_Model.mlflow" # Pastikan ini URL Dagshub Anda yang benar
-mlflow.set_tracking_uri(remote_server_uri)
-
 # Buat atau set eksperimen MLflow
 mlflow.set_experiment("Heart-Failure Prediction") 
 
