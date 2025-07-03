@@ -9,7 +9,7 @@ on:
       - main
       
 env:
-  CSV_URL: "MLproject/heart_preprocessing/train.csv"
+  CSV_URL: "MLProject/heart_preprocessing/train.csv"
   TARGET_VAR: "HeartDisease"
 
 jobs:
