@@ -9,8 +9,8 @@ on:
       - main
       
 env:
-  CSV_URL: "MLproject/train.csv"
-  TARGET_VAR: "Credit_Score"
+  CSV_URL: "MLproject/heart_preprocessing/train.csv"
+  TARGET_VAR: "HeartDisease"
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
 
       - name: Run mlflow project
         run: |
-          mlflow run . -P MLProject --env-manager=local
+          mlflow run MLProject --env-manager=local
 
       # Get latest run_id
       - name: Get latest MLflow run_id
