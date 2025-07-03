@@ -9,3 +9,4 @@ entry_points:
       max_depth: {type: int, default: 35}
       dataset : {type: string, default: "train.csv"}
     command: "python modelling.py {n_estimators} {max_depth} {dataset}"
+
