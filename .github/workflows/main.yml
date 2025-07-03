@@ -39,7 +39,7 @@ jobs:
           
       - name: Run MLflow Training Script
         run: |
-          python modelling.py 100 10
+          python MLProject/modelling.py 100 10
 
       - name: Run mlflow project
         run: |
