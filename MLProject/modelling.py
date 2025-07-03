@@ -11,27 +11,14 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     np.random.seed(40)
 
-    # --- Penanganan Path Data ---
-    # Mendapatkan direktori skrip saat ini
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    # Membuat path ke file train.csv di dalam folder heart_preprocessing
-    data_path = os.path.join(current_dir, "heart_preprocessing", "train.csv")
-
-    try:
-        data = pd.read_csv(data_path)
-    except FileNotFoundError:
-        print(f"Error: Data file '{data_path}' not found.")
-        print("Please ensure 'train.csv' is in the 'heart_preprocessing' directory relative to your script, or provide the correct path.")
-        sys.exit(1) 
-
-    X = data.drop("HeartDisease", axis=1)
-    y = data["HeartDisease"]
+    file_path = sys.argv[3] if len(sys.argv) > 3 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "heart_preprocessing/train.csv")
+    data = pd.read_csv(file_path)
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
-        random_state=42,
-        test_size=0.2,
-        stratify=y
+    data.drop("HeartDisease", axis=1),
+    data["HeartDisease"],
+    random_state=42,
+    test_size=0.2
     )
 
     input_example = X_train[0:5]
