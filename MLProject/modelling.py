@@ -32,7 +32,7 @@ if __name__ == "__main__":
         model = RandomForestClassifier(n_estimators=n_estimators, max_depth=max_depth)
         model.fit(X_train, y_train)
 
-        predicted_qualities = model.predict(X_test)
+        predicted = model.predict(X_test)
 
         mlflow.sklearn.log_model(
         sk_model=model,
