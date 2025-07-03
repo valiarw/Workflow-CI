@@ -31,7 +31,6 @@ jobs:
 
       - name: Run mlflow project
         run: |
-          # Pastikan path ini sesuai dengan lokasi script preprocessing kamu
           mlflow run MLProject --env-manager=local 
 
       # Get latest run_id
