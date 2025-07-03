@@ -10,6 +10,7 @@ on:
       
 env:
   CSV_URL: "MLproject/train.csv"
+  TARGET_VAR: "Credit_Score"
 
 jobs:
   build:
@@ -17,7 +18,7 @@ jobs:
  
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Python 3.12.7
         uses: actions/setup-python@v4
@@ -35,7 +36,7 @@ jobs:
 
       - name: Run mlflow project
         run: |
-          mlflow run ./MLproject --env-manager=local
+          mlflow run MLproject --env-manager=local
 
       # Get latest run_id
       - name: Get latest MLflow run_id
