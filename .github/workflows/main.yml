@@ -10,7 +10,6 @@ on:
       
 env:
   CSV_URL: "heart_preprocessing/train.csv"
-  TARGET_VAR: "HeartDisease"
 
 jobs:
   build:
