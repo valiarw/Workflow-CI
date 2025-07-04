@@ -42,8 +42,8 @@ jobs:
           
       - name: Set up Git LFS
         run: |
-          git config --global user.name valiarw
-          git config --global user.email valiarw1300@gmail.com
+          git config --global user.name USERNAME
+          git config --global user.email EMAIL
           git lfs install
           git lfs track "mlruns/**"
           git add .gitattributes
@@ -53,8 +53,8 @@ jobs:
       # Save models to GitHub Repository
       - name: Save mlruns to repo
         run: |
-          git config --global user.name valiarw
-          git config --global user.email valiarw1300@gmail.com
+          git config --global user.name USERNAME
+          git config --global user.email EMAIL
           git add -f mlruns/
           git commit -m "Save mlruns from CI run" || true
           git push origin main
@@ -68,16 +68,16 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.valiarw }}
-          password: ${{ secrets.dckr_pat_aP0p2ejhOpylf_6Hi73X9ppxzn0 }}
+          username: USERNAME
+          password: TOKEN_DOCKER
 
       # Tag the Docker image
       - name: Tag Docker Image
         run: |
-          docker tag cc ${{ secrets.valiarw }}/cc:latest
+          docker tag cc USERNAME/cc:latest
 
       # Push Docker image to Docker Hub
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.valiarw }}/cc:latest
+          docker push USERNAME/cc:latest
 
