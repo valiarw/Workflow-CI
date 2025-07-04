@@ -53,8 +53,8 @@ jobs:
       # Save models to GitHub Repository
       - name: Save mlruns to repo
         run: |
-          git config --global user.name ${{ valiarw }}
-          git config --global user.email ${{ valiarw1300@gmail.com }}
+          git config --global user.name valiarw
+          git config --global user.email valiarw1300@gmail.com
           git add -f mlruns/
           git commit -m "Save mlruns from CI run" || true
           git push origin main
