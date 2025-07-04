@@ -11,7 +11,7 @@ if __name__ == "__main__":
     warnings.filterwarnings("ignore")
     np.random.seed(40)
 
-    file_path = sys.argv[3] if len(sys.argv) > 3 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "heart_preprocessing/train.csv")
+    file_path = sys.argv[3] if len(sys.argv) > 3 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "train.csv")
     data = pd.read_csv(file_path)
 
     X_train, X_test, y_train, y_test = train_test_split(

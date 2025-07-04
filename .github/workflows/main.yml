@@ -40,7 +40,26 @@ jobs:
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Latest run_id: $RUN_ID"
           
-      # Build Docker Model
+      - name: Set up Git LFS
+        run: |
+          git config --global user.name valiarw
+          git config --global user.email valiarw1300@gmail.com
+          git lfs install
+          git lfs track "mlruns/**"
+          git add .gitattributes
+          git commit -m "Track large files in mlruns with Git LFS" || true
+          git push origin main
+              
+      # Save models to GitHub Repository
+      - name: Save mlruns to repo
+        run: |
+          git config --global user.name valiarw
+          git config --global user.email valiarw1300@gmail.com
+          git add -f mlruns/
+          git commit -m "Save mlruns from CI run" || true
+          git push origin main
+
+       # Build Docker Model
       - name: Build Docker Model
         run: |
           mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name "cc" 
@@ -49,17 +68,16 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          username: ${{ secrets.valiarw }}
+          password: ${{ secrets.dckr_pat_aP0p2ejhOpylf_6Hi73X9ppxzn0 }}
 
       # Tag the Docker image
       - name: Tag Docker Image
         run: |
-          docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+          docker tag cc ${{ secrets.valiarw }}/cc:latest
 
       # Push Docker image to Docker Hub
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
+          docker push ${{ secrets.valiarw }}/cc:latest
 
-          
